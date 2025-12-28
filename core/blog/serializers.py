@@ -8,20 +8,24 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'email']
 
+
 # Register User Serializer
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'password']
-        extra_kwargs = {'password': {'write_only': True}}
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'username': {
+                'error_messages': {
+                    'invalid': 'Username can contain only letters, digits and @/./+/-/_'
+                }
+            }
+        }
 
     def create(self, validated_data):
-        user = User.objects.create_user(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            password=validated_data['password']
-        )
-        return user
+        return User.objects.create_user(**validated_data)
+
 
 # BlogPost Serializer
 class BlogPostSerializer(serializers.ModelSerializer):
@@ -30,6 +34,7 @@ class BlogPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = BlogPost
         fields = '__all__'
+
 
 # Comment Serializer
 class CommentSerializer(serializers.ModelSerializer):

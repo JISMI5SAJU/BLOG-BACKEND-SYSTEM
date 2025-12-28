@@ -1,6 +1,21 @@
 from django.shortcuts import render
+from django.http import JsonResponse
+from django.http import HttpResponse
 
-# Create your views here.
+def home(request):
+    return HttpResponse("Welcome to the Blog!")
+
+
+# Root/test view
+def root_view(request):
+    return JsonResponse({"message": "Welcome to the Blog API!"})
+
+def test_view(request):
+    return JsonResponse({"message": "Blog app is working!"})
+
+# -------------------------------
+# REST framework imports and views
+# -------------------------------
 from rest_framework import viewsets, generics, permissions
 from rest_framework.response import Response
 from django.contrib.auth.models import User

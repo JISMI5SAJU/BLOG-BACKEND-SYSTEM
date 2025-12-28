@@ -16,25 +16,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include('blog.urls')),
-]
-
-
-from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import BlogPostViewSet, CommentViewSet, RegisterView
+from blog.views import BlogPostViewSet, CommentViewSet, RegisterView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+# DRF router
 router = DefaultRouter()
 router.register('blogs', BlogPostViewSet)
 router.register('comments', CommentViewSet)
 
 urlpatterns = [
-    path('auth/register/', RegisterView.as_view(), name='register'),
-    path('auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('', include(router.urls)),
+    path('admin/', admin.site.urls),
+    
+    # Auth endpoints
+    path('api/auth/register/', RegisterView.as_view(), name='register'),
+    path('api/auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    
+    # API endpoints from router
+    path('api/', include(router.urls)),
 ]
